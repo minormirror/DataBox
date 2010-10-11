@@ -1,0 +1,31 @@
+
+/* box classes */
+html {margin : 0;padding : 0;}
+body {margin : 0; padding : 0;background-color:#FFFFFF;}
+
+.mendiv_pos {position:fixed; top:20px; right:20px; width:190px; height:130px; z-index:99;}
+
+.tabl_box { border-style: hidden;outline:0px;border-width:0px;border-spacing:0px;border-collapse:collapse;empty-cells:show;}
+
+.in_tabl_box {border-style:none; border-spacing:0px; border-collapse:collapse; background-color:#FFFFFF;}
+
+.layer { width:200px; background-color:#fffaac; border:solid 1px #000000; }
+
+.top_lo {background:url(../resources/buttons/rahmen2/menuframe_1.gif);width:14px;height:15px;background-repeat:no-repeat;}
+
+.top_o {background:url(../resources/buttons/rahmen2/menuframe_2.gif);height:15px;background-repeat:x-repeat;color:#5d5d5d;}
+
+.top_re {background:url(../resources/buttons/rahmen2/menuframe_3.gif);width:16px;height:15px;background-repeat:no-repeat;}
+
+.mid_r {background:url(../resources/buttons/rahmen2/menuframe_5.gif); width:16px;background-repeat:y-repeat;}
+
+.mid_l {background:url(../resources/buttons/rahmen2/menuframe_4.gif); width:14px;background-repeat:y-repeat;}
+
+.mid {  font-size: 13px;font-family:arial, helvetica, sans-serif; color:#101010;}
+
+.bot_lo {background:url(../resources/buttons/rahmen2/menuframe_6.gif); width:14px;height:15px; background-repeat:no-repeat; }
+
+.bot {background:url(../resources/buttons/rahmen2/menuframe_7.gif); height:15px; background-repeat:x-repeat;}
+
+.bot_re {background:url(../resources/buttons/rahmen2/menuframe_8.gif); width:16px;height:15px;background-repeat:no-repeat;}
+

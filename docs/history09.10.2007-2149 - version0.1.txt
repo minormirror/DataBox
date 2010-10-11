@@ -1,0 +1,2 @@
+09.10.07 stb - quellen rübergeschoben und htaccess erstellt
+09.10.07 jd  - Verzeichnisstruktur  /resourcen /classes /backup im bin benennung zu Version 0.1

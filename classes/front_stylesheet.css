@@ -1,0 +1,31 @@
+/* anmeldung_html classes */
+
+html {margin : 0;padding : 0;}
+body {margin : 0; padding : 0;}
+a:link {text-decoration : none;}
+a:visited {text-decoration : none;color:blue;}
+a:hover, a:active {text-decoration : underline;color:rgb(35,6,196);}
+
+.font_grey {font-size: 16px; font-weight:bold; font-family:arial, helvetica, sans-serif; color:gray;text-decoration:underline;}
+.font_light_grey {font-size: 12px; font-family:arial, helvetica, sans-serif; color:gray;}
+.header_ol {font-size: 16px; font-weight:bold;font-family:arial, helvetica, sans-serif; color:blue; margin-left:1em; position:absolute; top:40px; left:0px;}
+.header_or1 {font-size: 16px;font-weight:bold; font-family:arial, helvetica, sans-serif; color:blue; margin-right:auto; position:absolute; top:40px; right:135px;}
+.header_or_M {font-size: 16px;font-weight:bold; font-family:arial, helvetica, sans-serif; color:grey; margin-right:auto; position:absolute; top:40px; right:125px;}
+.header_or2 {font-size: 16px;font-weight:bold; font-family:arial, helvetica, sans-serif; color:blue; margin-right:auto; position:absolute; top:40px; right:30px;}
+.header_line_0 {background:url(../resources/buttons/rahmen2/menuframe_2.gif);height:15px;background-repeat:x-repeat;margin-top:0px;}
+.header_line_1 {border: 0px none ; background-color: grey; height: 5px;}
+.anmeld_form {background-color:#FFFFFF; margin:auto; top:120px; width:320px; height:340px;}
+.anmeld_button{font-size: 14px; font-weight:bold;font-family:arial, helvetica, sans-serif; color:blue;}
+.pw_erinnerung_button{font-size: 12px;font-weight:italic; font-family:arial, helvetica, sans-serif; color:blue;}
+
+/*hier kommen die attribute für die projetbeschreibungsseite hin*/
+/* oberbegrenzung - unterbegrenzung*/
+.project_line_1 {border: 0px none ; background-color: grey; height: 3px;}
+/*projetbezeichnung*/
+.projekt_name {font-size: 12px; font-weight:bold;font-family:arial, helvetica, sans-serif; color:blue;}
+/* begrenzung überschrift-inhalt*/
+.project_line_2 {border: 0px none ; background-color: grey; height: 1px;}
+/*inhalt*/
+.projekt_inhalt {font-size: 10px; font-weight:bold;font-family:arial, helvetica, sans-serif; color:gray;}
+
+

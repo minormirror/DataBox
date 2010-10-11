@@ -1,0 +1,642 @@
+/*####################################################### Ajax ###################################################*/
+var req;
+function loadXMLDoc(url) {
+	req = false;
+    // branch for native XMLHttpRequest object
+    if(window.XMLHttpRequest && !(window.ActiveXObject)) {
+    	try {
+			req = new XMLHttpRequest();
+        } catch(e) {
+			req = false;
+        }
+    // branch for IE/Windows ActiveX version
+    } else if(window.ActiveXObject) {
+       	try {
+        	req = new ActiveXObject("Msxml2.XMLHTTP");
+      	} catch(e) {
+        	try {
+          		req = new ActiveXObject("Microsoft.XMLHTTP");
+        	} catch(e) {
+          		req = false;
+        	}
+		}
+    }
+	if(req) {
+		req.onreadystatechange = processReqChange;
+		req.open("GET", url, true);
+		req.send("");
+	}
+}
+
+function processReqChange(tt){
+  /*if (req){    
+      setInfo(req.responseText);    
+  }
+  */
+}
+
+/*####################################################### Arrow ###################################################*/
+
+function Arrow(bc){  
+  this.bc = bc;  
+  this.hLine = true;
+  this.startIb = null;
+  this.endIb = null;
+  
+  this.subElements = new Array();
+  var startX=0;
+  var startY=0;
+  var endX=0;
+  var endY=0;  
+  this.stroke = 2;  
+ 
+  this.startEl = document.createElement("div");     
+  this.startEl.style.backgroundColor ="#ff0000";
+  this.startEl.style.width = "10px";
+  this.startEl.style.height = "10px";  
+  this.startEl.style.position="absolute";
+  this.subElements.push(this.startEl);
+  document.getElementById(this.bc.parent_element_id).appendChild(this.startEl);    
+  
+  this.middleEl = document.createElement("div");     
+  this.middleEl.style.backgroundColor ="#ff0000";
+  this.middleEl.style.width = "10px";
+  this.middleEl.style.height = "10px";  
+  this.middleEl.style.position="absolute";
+  this.subElements.push(this.middleEl);
+  document.getElementById(this.bc.parent_element_id).appendChild(this.middleEl);   
+
+  this.endEl = document.createElement("div");     
+  this.endEl.style.backgroundColor ="#aaaa00";
+  this.endEl.style.width = "10px";
+  this.endEl.style.height = "10px";  
+  this.endEl.style.position="absolute";
+  this.subElements.push(this.endEl);
+  document.getElementById(this.bc.parent_element_id).appendChild(this.endEl);  
+  
+  this.deleteArrow = function(){
+    document.getElementById(this.bc.parent_element_id).removeChild(this.startEl);
+	document.getElementById(this.bc.parent_element_id).removeChild(this.middleEl);
+	document.getElementById(this.bc.parent_element_id).removeChild(this.endEl);	
+	
+	if (this.startIb != null){
+	  this.startIb.startArrows = arrayRemove(this.startIb.startArrows,this);		  
+	}
+	
+	if (this.endIb != null){
+	  this.endIb.endArrows = arrayRemove(this.endIb.endArrows,this);	
+	}	
+  }
+  
+  this.getMaxZ = function(){
+    return this.middleEl.style.zIndex;  
+  }
+  
+  this.setFocus = function(){
+    this.bc.setFocus(this.startEl);
+    this.bc.setFocus(this.middleEl);
+    this.bc.setFocus(this.endEl);
+  }
+  
+  this.setStartPos = function (x,y){ 
+    this.startX = x;
+	this.startY = y;
+    this.refresh();
+  }
+  
+  this.setEndPos = function (x,y){
+    this.endX = x;
+	this.endY = y;
+	this.refresh();
+  }
+  
+  this.refresh = function (){    
+    if (Math.abs(this.startX-this.endX) > Math.abs(this.startY-this.endY)){	      
+	  if (this.startX > this.endX){	
+	    var width = this.startX-this.endX;
+		
+		this.startEl.style.left = this.endX+width/2;
+		this.startEl.style.top = this.startY;
+		this.startEl.style.width  = width/2;
+		this.startEl.style.height = this.stroke;
+		
+		var minY = 0;
+		var height = 0;
+		
+		if (this.startY < this.endY){
+		  height = this.endY - this.startY;
+		  minY = this.startY;
+		}else{
+		  height = this.startY - this.endY;
+		  minY = this.endY;
+		}		
+		
+		this.middleEl.style.left = this.endX+width/2;
+		this.middleEl.style.top = minY;
+		this.middleEl.style.width  = this.stroke;
+		this.middleEl.style.height =  height;
+		
+		this.endEl.style.left = this.endX;
+		this.endEl.style.top = this.endY;
+		this.endEl.style.width  = width/2;
+		this.endEl.style.height = this.stroke;		
+	  }else{	    
+	    var width = this.endX-this.startX;
+	
+		this.startEl.style.left = this.startX;
+		this.startEl.style.top = this.startY;
+		this.startEl.style.width  = width/2;
+		this.startEl.style.height = this.stroke;		
+		
+		var height = 0;
+		
+		if (this.startY < this.endY){
+		  height = this.endY - this.startY;		 
+		}else{
+		  height = this.startY - this.endY;		 
+		}		
+		
+		this.middleEl.style.left =this.startX+width/2;
+		this.middleEl.style.top = Math.min(this.startY,this.endY);//minY;
+		this.middleEl.style.width  = this.stroke;
+		this.middleEl.style.height =  height;
+		
+		
+		this.endEl.style.left = this.startX+width/2;
+		this.endEl.style.top = this.endY;
+		this.endEl.style.width  = width/2;
+		this.endEl.style.height = this.stroke;				
+	  }	  
+	}else{	  
+	  if (this.startY > this.endY){	    	    
+	    var height = this.startY-this.endY;
+		
+		this.startEl.style.left = this.startX;
+		this.startEl.style.top = this.endY + height/2;
+		this.startEl.style.width  = this.stroke;
+		this.startEl.style.height = height/2;
+		
+		var minX = 0;
+		var width = 0;
+		
+		if (this.startX < this.endX){
+		  width = this.endX - this.startX;
+		  minX = this.startX;
+		}else{
+		  width = this.startX - this.endX;
+		  minX = this.endX;
+		}		
+		
+		this.middleEl.style.left = minX;
+		this.middleEl.style.top = this.endY + height/2;
+		this.middleEl.style.width  = width;
+		this.middleEl.style.height =  this.stroke;
+		
+		this.endEl.style.left = this.endX;
+		this.endEl.style.top = this.endY;
+		this.endEl.style.width  = this.stroke;
+		this.endEl.style.height = height/2;
+
+	  }else{	        
+	    var height = this.endY-this.startY;
+		
+		this.startEl.style.left = this.startX;
+		this.startEl.style.top = this.startY;
+		this.startEl.style.width  = this.stroke;
+		this.startEl.style.height = height/2;
+		
+		var minX = 0;
+		var width = 0;
+		
+		if (this.startX < this.endX){
+		  width = this.endX - this.startX;
+		  minX = this.startX;
+		}else{
+		  width = this.startX - this.endX;
+		  minX = this.endX;
+		}		
+		
+		this.middleEl.style.left = minX;
+		this.middleEl.style.top = this.startY + height/2;
+		this.middleEl.style.width  = width;
+		this.middleEl.style.height =  this.stroke;
+		
+		this.endEl.style.left = this.endX;
+		this.endEl.style.top = this.startY + height/2;
+		this.endEl.style.width  = this.stroke;
+		this.endEl.style.height = height/2;
+	  }
+	}	
+  }
+}
+
+
+/*####################################################### InfoBox ###################################################*/
+
+
+function InfoBox(bc){ 
+  this.bc = bc;   
+  this.startArrows = new Array();
+  this.endArrows = new Array();
+  
+  this.div_element = document.createElement("div");      
+  //this.div_element.className="textElement";
+  var tab = document.createElement("table"); 
+  tab.width = "100%";
+  tab.height = "100%";
+  tab.cellSpacing="0px";
+  tab.cellPadding ="0px";  
+  
+  this.tr1 = document.createElement("tr");
+  this.tr1.style.backgroundColor ="#79d5e0";
+  
+  this.tr1onmousedown = function (ev){ return this.bc.eventSwitch("INFO_BOX_HEAD_MOUSEDOWN",this,ev);}  
+  this.tr1.onmousedown = this.tr1onmousedown.bindAsEventListener(this);   
+ 
+
+  var td1 = document.createElement("td");  
+  
+  var img1 = document.createElement("img"); 
+  img1.src = "resources/arrow.png";   
+  
+  this.img1onclick = function (ev){  return this.bc.eventSwitch("INFO_BOX_ARROW_BTN_MOUSECLICK",this,ev); }   
+  img1.onclick = this.img1onclick.bindAsEventListener(this); 
+ 
+  td1.appendChild(img1); 
+  
+  this.tr1.appendChild(td1);  
+  tab.appendChild(this.tr1);  
+  
+  var tr2 = document.createElement("tr");  
+  var td2 = document.createElement("td");
+  this.textbox = document.createElement("textarea");    
+  this.textbox.style.width="100%";
+  this.textbox.style.height="120px";
+  this.textbox.style.border="solid 1px #aaaaaa;";
+  this.textbox.style.fontSize = "0.8em";
+  this.textbox.style.fontFamily = "Verdana, Arial, sans-serif";
+  this.textbox.style.backgroundColor ="#fbf9eb";
+  td2.appendChild(this.textbox);
+  tr2.appendChild(td2);
+  tab.appendChild(tr2); 
+
+  var tr3 = document.createElement("tr");   
+  var td3 = document.createElement("td");
+  td3.style.textAlign="right";  
+  
+  var img = document.createElement("img"); 
+  img.src = "resources/resize.png";  
+  
+  this.headImgMouseDownHandler = function (ev){ return this.bc.eventSwitch("INFO_BOX_RESIZE_BTN_MOUSEDOWN",this,ev);}      
+  img.onmousedown = this.headImgMouseDownHandler.bindAsEventListener(this);
+ 
+  td3.appendChild(img);
+  
+  tr3.appendChild(td3);  
+  tab.appendChild(tr3);  
+  
+  this.div_element.appendChild(tab);
+  
+  this.div_element.style.border="solid 1px #000000;";
+  this.div_element.style.position="absolute";
+  this.div_element.style.width = "160px";  
+  this.div_element.style.backgroundColor = "#e7e5d7";
+
+  
+  this.isNewArrowAllowed = function(arrow){
+    return (arrow.startIb != this);    
+  } 
+  
+  this.setCursor = function(cursor){
+    var cursor = "default";
+    if (this.bc.currState == "FLY_ARROW"){
+	  if (this.isNewArrowAllowed(this.bc.currElement)){
+	    cursor = "pointer";	
+	  }else{
+	    cursor = "not-allowed";	
+	  }	  
+	}
+	
+    this.div_element.style.cursor =cursor;
+   	this.tr1.style.cursor =cursor;
+	if (cursor == "default"){
+	  cursor ="text";
+	}
+	this.textbox.style.cursor =cursor;
+  }
+  
+  this.div_element_onmousemove = function(ev){ 
+    //loadXMLDoc("test.php");  
+    this.setCursor();		
+  }    
+  this.div_element.onmousemove = this.div_element_onmousemove.bindAsEventListener(this);   
+  
+  this.setzeText = function(message){     
+    this.textbox.value = message;	
+  }  
+  
+  
+  this.div_element_onmouseover = function(ev){            
+    this.div_element.style.backgroundColor = "#fbf9e9";
+	this.tr1.style.backgroundColor ="#b0f7ff";
+	this.textbox.style.backgroundColor ="#ffffff";
+	
+	this.setCursor();	
+  }    
+  this.div_element.onmouseover = this.div_element_onmouseover.bindAsEventListener(this);  
+  
+  this.div_element_onmouseout = function(ev){
+    this.div_element.style.backgroundColor = "#e7e5d7";        
+	this.tr1.style.backgroundColor ="#79d5e0";
+	this.textbox.style.backgroundColor ="#fbf9eb";
+	
+  }    
+  this.div_element.onmouseout = this.div_element_onmouseout.bindAsEventListener(this);
+  
+  
+  
+  this.div_element_onmouseup = function(ev){ 
+    var res = this.bc.eventSwitch("INFO_BOX_MOUSEUP",this,ev);
+	this.setCursor();
+	return res;  
+  }    
+  this.div_element.onmouseup = this.div_element_onmouseup.bindAsEventListener(this);
+  
+  
+  
+  /*- functions -*/
+  
+  this.resizeInfoBox = function(ev){
+    var currTarget = ev.target;
+    this.bc.currElement = this.div_element;
+    this.bc.currElementOffsetX = ev.clientX-this.div_element.offsetLeft;
+    this.bc.currElementOffsetY = ev.clientY-this.div_element.offsetTop;
+    this.bc.currOffsetX = this.div_element.offsetLeft;
+    this.bc.currOffsetY = this.div_element.offsetTop;
+  }
+  
+  this.refreshArrows = function (){    
+    //unterscheidung bei Berechnung der pfeil start/endposition
+	// 1: der Pfeil geht direkt von IB zu IB => berechnung nach algouml
+	// 2: der Pfeil der Pfeil läuft von IB zu Arrow-Node => 
+  
+    for(var i=0;i<this.startArrows.length;i++){	  	 
+	  this.startArrows[i].setStartPos(unpx(this.div_element.style.left)+(this.div_element.offsetWidth/2),unpx(this.div_element.style.top)+(this.div_element.offsetHeight/2));	  	  	  
+	}
+	
+	for(var i=0;i<this.endArrows.length;i++){	  
+	  this.endArrows[i].setEndPos(unpx(this.div_element.style.left)+(this.div_element.offsetWidth/2),unpx(this.div_element.style.top)+(this.div_element.offsetHeight/2));	  	  	  
+	}
+  }
+  
+  this.setText = function(txt){
+    this.content.value = txt;  
+  }   
+  
+  this.endArrow = function(ev){
+    this.bc.currElement.endIb = this;
+	this.endArrows.push(this.bc.currElement);
+	this.refreshArrows();	  
+  }  
+  
+  this.startDrag = function(ev){
+    this.bc.currElement =  this.div_element;
+	
+    this.bc.currElementOffsetX = ev.clientX-this.div_element.offsetLeft;
+    this.bc.currElementOffsetY = ev.clientY-this.div_element.offsetTop;	
+	
+	this.bc.setFocus(this.div_element);
+  }
+}
+
+
+
+/*####################################################### Control ###################################################*/
+
+function Control(parent_element_id){    
+  
+  this.currElement;
+  this.currOffsetX;
+  this.currOffsetY;
+  this.currElementOffsetX;
+  this.currElementOffsetY;  
+  this.parent_element_id = parent_element_id;
+  this.infoBoxList = new Array();  
+  
+  this.setFocus = function(div_element){     
+    function focusSort(a,b){  
+      var za = a.style.zIndex;
+	  var zb = b.style.zIndex;
+	  
+      if (za == ""){ za = "0"; }
+      if (zb == ""){ zb = "0"; }   
+      return za - zb;
+    }   
+  
+    var sub = new Array();	
+	var parent = document.getElementById(this.parent_element_id);
+	for(var i=0;i<parent.childNodes.length;i++){
+	  sub.push(parent.childNodes[i]);
+	}
+	
+	sub.sort(focusSort);
+	
+	for(var i=0;i<sub.length;i++){
+	  if (sub[i] == div_element){
+	    sub[i].style.zIndex = sub.length+1;
+	  }else{
+	    sub[i].style.zIndex = i;
+	  }
+	}
+  }  
+
+  this.startArrow = function (ib,ev){
+    var newarrow = new Arrow(this);
+	newarrow.setEndPos(ev.clientX+5,ev.clientY+5);
+	newarrow.startIb = ib;	
+	ib.startArrows.push(newarrow);
+	ib.refreshArrows();
+	this.currElement = newarrow;	    	
+  }
+  
+  this.deleteArrow = function(arrow){
+    arrow.deleteArrow();
+	
+  }
+
+  this.addTextBox = function (){
+    var newib = new InfoBox(this);  
+	this.infoBoxList.push(newib);
+    document.getElementById(this.parent_element_id).appendChild(newib.div_element);    
+	this.setState("NO_ACTION");	     
+  } 
+  
+  this.getInfoBoxByDIV = function (div){
+    var cont = document.getElementById(this.parent_element_id);
+	var c = 0;
+	for (var i=0;i<this.infoBoxList.length;i++){	  
+	  if (this.infoBoxList[i].div_element == div){
+	    return this.infoBoxList[i];
+	  }	
+	}	
+  }
+  
+  
+  this.drag_infobox = function(ev){
+    this.currElement.style.left = ev.clientX-this.currElementOffsetX;
+    this.currElement.style.top = ev.clientY-this.currElementOffsetY;
+	this.getInfoBoxByDIV(this.currElement).refreshArrows();
+  }
+  
+  
+  this.resize_infobox = function(ev){  
+    var new_width = ev.clientX-this.currOffsetX;
+    if (new_width < 160){
+      new_width = 160;
+    }	
+    this.currElement.style.width = new_width;
+    var new_height = ev.clientY-this.currOffsetY;
+    if (new_height < 120){
+      new_height = 120;
+    }	
+    this.currElement.childNodes[0].childNodes[1].childNodes[0].childNodes[0].style.height = (new_height-30)+"px";    
+    this.getInfoBoxByDIV(this.currElement).refreshArrows();  	  
+  } 
+	 
+	 
+  this.fly_arrow = function(ev){
+    this.currElement.setEndPos(ev.clientX+5,ev.clientY+5);		
+  }
+  
+  this.focusInfoBoxes = function(){
+    var max = 0;	
+	var parent = document.getElementById(this.parent_element_id);
+	for(var i=0;i<parent.childNodes.length;i++){
+	  max = Math.max(max,parent.childNodes[i].style.zIndex);
+	}	
+	for(var i=0;i<this.infoBoxList.length;i++){
+	  this.infoBoxList[i].div_element.style.zIndex += max;	  
+	}	
+  } 
+  
+  
+  this.onmousemove = function (ev){ return this.eventSwitch("BOARD_MOUSEMOVE",this,ev); }
+
+  this.onmouseup = function (ev){ return this.eventSwitch("BOARD_MOUSEUP",this,ev); }      
+  
+
+  this.currState = "NO_ACTION";
+  
+  this.setState = function (newstate){
+    setState(newstate);
+    this.currState = newstate;
+  }
+  
+  this.eventSwitch = function(event,obj,ev){ 
+    setEvent(event);     
+	
+    if (event == "INFO_BOX_HEAD_MOUSEDOWN"){	
+      if (this.currState == "NO_ACTION"){  
+        this.setState("DRAG_INFOBOX");	      
+	    obj.startDrag(ev);	 
+	  }	
+		 	
+	}else if (event == "INFO_BOX_ARROW_BTN_MOUSECLICK"){
+	  if (this.currState == "NO_ACTION"){
+	    obj.bc.startArrow(obj,ev);	  
+		this.currElement.setFocus();
+		this.setFocus(obj.div_element);
+	    this.setState("FLY_ARROW");
+	    return false;  
+	  }	  
+	}else if (event == "INFO_BOX_RESIZE_BTN_MOUSEDOWN"){
+	  if (this.currState == "NO_ACTION"){
+	    obj.resizeInfoBox(ev);
+        this.setState("RESIZE_INFOBOX");	
+		return false;
+	  }	
+	
+	}else if (event == "INFO_BOX_MOUSEUP"){
+	  if(this.currState == "FLY_ARROW"){	  	  	  	 
+	    if (obj.isNewArrowAllowed(this.currElement)){
+		  obj.endArrow(ev);		  		  
+		  this.focusInfoBoxes();		  		 
+		}else{
+		  this.deleteArrow(this.currElement);
+		}		
+		//this.setFocus(obj.div_element);		  
+		this.setState("NO_ACTION");		
+		return false;
+	  }
+	
+	}else if (event == "BOARD_MOUSEUP"){
+	  if (this.currState == "DRAG_INFOBOX") {	  
+        this.setState("NO_ACTION");
+      }else if (this.currState == "RESIZE_INFOBOX"){
+	    this.setState("NO_ACTION");	
+	  }else if(this.currState == "FLY_ARROW"){	  	  	  	 
+	    this.deleteArrow(this.currElement);
+	    this.setState("NO_ACTION");	
+	  }
+	  
+	}else if (event == "BOARD_MOUSEMOVE"){	  
+	  if (this.currState == "DRAG_INFOBOX"){		
+		obj.drag_infobox(ev);
+	  }else if (this.currState == "RESIZE_INFOBOX"){    
+	    obj.resize_infobox(ev);
+	  }else if (this.currState == "FLY_ARROW"){ 
+	    obj.fly_arrow(ev);
+      }	  
+	}
+	
+	return true;  
+  }
+ 
+  
+}
+
+
+
+
+/*####################################################### functions ###################################################*/
+
+function unpx(str){
+  if (str.substring(str.length-2) == "px"){
+    str = str.substring(0,str.length-2);
+  }  
+  return Math.round(str); 
+}
+
+function arrayRemove(a,element){
+  var na = new Array();
+  for(var i=0;i<a.length;i++){	
+    if (a[i] != element){
+	  na.push(a[i]);
+	}
+  }
+  return na;
+}
+
+function setState(info){
+ document.getElementById("statebox").firstChild.nodeValue  = "STATE:["+info+"]";
+}
+
+function setEvent(info){
+ document.getElementById("eventbox").firstChild.nodeValue  = "EVENT:["+info+"]";
+}
+
+
+function setInfo(info){
+ document.getElementById("infobox").firstChild.nodeValue  = "MSG:["+info+"]";
+}
+
+
+Function.prototype.bindAsEventListener = function (object) {
+	var method = this;
+	var wrapper = function (event) {
+		return method.call(object, event || window.event);
+	};
+	return wrapper;
+};
+
+
