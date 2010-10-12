@@ -1,0 +1,13 @@
+freie-projekte-netz.de
+
+Confixx und ftp zugangsdaten:
+user: web64
+passwd: saufen2805
+confixx unter: http://martin.ebiz-webhosting.de/user/ ftp unter: freie-projekte-netz.de
+
+user: web64
+passwd: kiffen2805
+
+mysql:
+user: web64
+passwd: web1n641

@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "DataBox-Bereich"
+AuthUserFile /home/www/web64/html/data_box/.htusers
+Require user  DataBox

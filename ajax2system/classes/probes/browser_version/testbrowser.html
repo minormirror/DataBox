@@ -1,0 +1,45 @@
+<html><head><title>BrowserSearch</title>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8">
+<script src="browser.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="null"><style TYPE="text/css"><!--BODY { background: #000040; }
+.para1 { margin-top: -42px; margin-left: 145px; margin-right: 10px; font-family: "font2, Arial"; font-size: 15px; line-height: 35px; text-align: left; color: #E1E1E1; }
+.para2 { margin-top: 15px; margin-left: 15px; margin-right: 50px; font-family: "font1, Arial Black"; font-size: 20px; line-height: 40px; text-align: left; color: #004080; }
+--></style></head>
+
+
+<body BGCOLOR="#000080" topmargin="0" leftmargin="0" text="#FFFFFF">
+
+<div CLASS="para2" align="center">
+<p align="center">
+<hr width="90%" noshade size="1" color="#FFBF00">
+<SCRIPT LANGUAGE="JavaScript">
+document.open();
+document.writeln("<p align='center'> ");
+document.writeln(getBrowserType());
+document.writeln("</p>");
+document.close();
+</SCRIPT>
+<br><br><br>
+<script type="text/javascript">
+
+document.write("<br><p align='center'>Diese Daten sendet Ihr Browser, wenn er Dateien im WWW anfordert: <br>");
+document.write(navigator.userAgent);
+
+document.write("<br><br>..und die methode appCodeName gibt das aus..<br>");
+document.write(navigator.appCodeName);
+
+document.write("<br><br>..und die methode appName gibt das aus..<br>");
+document.write(navigator.appName);
+
+document.write("<br><br>und die methode appVersion gibt das aus <br>");
+document.write(navigator.appVersion);
+document.write("</p>");
+
+</script>
+
+<hr width="90%" noshade size="1" color="#FFBF00">
+</p>
+</div>
+
+</body></html>

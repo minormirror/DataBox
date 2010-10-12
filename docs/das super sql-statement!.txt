@@ -1,0 +1,1 @@
+SELECT * FROM ib_ib WHERE subversion = ANY (SELECT MAX(subversion) FROM ib_ib GROUP BY ib_id) AND removed = 0 AND subversion > 1

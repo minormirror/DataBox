@@ -1,0 +1,5 @@
+umwandlung auf json:
+
+rpc_update => abgeschlossen
+rpc_create_ib => abgeschlossen
+rpc_updatePos => abgeschlossen
